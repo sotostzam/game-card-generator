@@ -1,5 +1,6 @@
 from PIL import Image, ImageDraw, ImageFont, ImageColor
 import math
+import json
 
 class Card:
 	"""
@@ -124,18 +125,12 @@ class Card:
 		# Save the card image
 		card_name = self.name.lower().replace(" ", "_")
 		card.save(f"cards/{card_name}.png")
-		print(f"Card created and saved as '{card_name}.png'.")
+		print(f"Card '{card_name}' created successfully.")
 
-# Example usage
-card = Card(name="Cum Snail",
-			type="Mythical Encounter",
-			info="It sticks everywhere.",
-			effect="Rub each others genitals for 2 minutes.",
-			image="penis.png",
-			border_size=0,
-			attributes={
-				'genders': 'both',
-				'cum': 'cum'
-			},
-			font_path="EduSABeginner.ttf")
-card.create_card()
+if __name__ == "__main__":
+	json_file = open('cards.json')
+	cards = json.load(json_file)
+
+	for item in cards:
+		card = Card(**item)
+		card.create_card()
