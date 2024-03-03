@@ -1,10 +1,11 @@
 from PIL import Image, ImageDraw, ImageFont, ImageColor
+import math
 
 class Card:
 	"""
 	Class representing a customizable game card.
 	"""
-	def __init__(self, name, type, info, effect, image, attributes=None, layout="layout.png", border_size=5, font_size=30, font_path=None):
+	def __init__(self, name, type, info, effect, image, attributes=None, border_size=5, font_size=30, font_path=None):
 		"""
 		Initializes a Card object.
 
@@ -20,82 +21,82 @@ class Card:
 		self.type = type
 		self.info = info
 		self.effect = effect
-		self.layout = layout
 		self.image_path = image
 		self.border_size = border_size
+		self.attributes = attributes
+
 		self.font_size = font_size
 		self.font_path = font_path
-		self.attributes = attributes
+		self.normal_font = ImageFont.truetype(f"fonts/{self.font_path}" or "arial.ttf", self.font_size)
+
+		self.layout_size = (750, 1050)
+
+		self.inner_bg = "black"
+		self.green = ImageColor.getrgb("#9ac360")
+		self.yellow = ImageColor.getrgb("#966a00")
+
+	def makeRectangle(self, l, w, theta, offset=(0,0)):
+		c, s = math.cos(theta), math.sin(theta)
+		rectCoords = [(l/2.0, w/2.0), (l/2.0, -w/2.0), (-l/2.0, -w/2.0), (-l/2.0, w/2.0)]
+		return [(c*x-s*y+offset[0], s*x+c*y+offset[1]) for (x,y) in rectCoords]
 		
-		self.safe_area_width = 8/100
-		self.safe_area_height = 5.71/100
-
-		self.green = "#9ac360"
-
 	def create_card(self):
 		"""
 		Creates and saves the card image.
 		"""
-		# Load image
-		layout = Image.open(f"assets/{self.layout}")
+		layout = Image.new("RGB", self.layout_size, "white")
 
 		# Get card dimensions with border
 		card_width, card_height = layout.size
 		card_width += 2 * self.border_size
 		card_height += 2 * self.border_size
 
-		details_pad_left = card_width * .3
-		details_pad_top = card_height - (card_height * 32 / 100)
-
 		# Create new image with border
-		card_image = Image.new("RGB", (card_width, card_height), "black")
-		card_image.paste(layout, (self.border_size, self.border_size))
+		card = Image.new("RGB", (card_width, card_height), "black")
+		card.paste(layout, (self.border_size, self.border_size))
 
 		# Put the card's image
 		card_avatar = Image.open(f"images/{self.image_path}")
-		card_image.paste(card_avatar, ((card_width - card_avatar.size[0]) // 2, int(card_height * 0.6 - card_avatar.size[1]) // 2))
+		card.paste(card_avatar, ((card_width - card_avatar.size[0]) // 2, int(card_height * 0.6 - card_avatar.size[1]) // 2))
 
-		draw = ImageDraw.Draw(card_image)
-		normal_font = ImageFont.truetype(f"fonts/{self.font_path}" or "arial.ttf", self.font_size)
+		# Initialize drawing methods
+		draw = ImageDraw.Draw(card)
 
-		# Draw the layout circle
+		details_pad_left = card_width * .3
+		details_pad_top = card_height - (card_height * 32 / 100)
+
+		# Draw the layout's shapes
+		shape = [(0 + self.border_size, card_height - (card_height * .377)), (card_width - self.border_size - 0.01, card_height - (card_height * .377))]
+		draw.line(shape, fill=self.green, width=20)
+
 		circle_radius = 65
-		layout_circle_x = (details_pad_left - circle_radius * 2) // 2
-		layout_circle_y = card_height - (card_height * .44)
+		circle_x = (details_pad_left - circle_radius * 2) // 2
+		circle_y = card_height - (card_height * .44)
 
-		draw.ellipse((layout_circle_x, layout_circle_y,
-					  layout_circle_x + circle_radius * 2, layout_circle_y + circle_radius * 2),
-					  fill=ImageColor.getrgb(self.green))
-	
-		inner_offset = 5
-		circle_radius = 55
-		layout_circle_x = (details_pad_left - circle_radius * 2) // 2
-		layout_circle_y = card_height - (card_height * .44) + 10
+		draw.ellipse((circle_x, circle_y, circle_x + circle_radius * 2, circle_y + circle_radius * 2),
+					  fill=self.inner_bg,
+					  outline=self.green,
+					  width=10)
 
-		draw.ellipse((layout_circle_x, layout_circle_y,
-					  layout_circle_x + circle_radius * 2, layout_circle_y + circle_radius * 2),
-					  fill=0)
-		
-		shape = [(0 + self.border_size, card_height - (card_height * .377)), (200, card_height - (card_height * .377))]
-		draw.line(shape, fill ="red", width = 20)
+		vertices = self.makeRectangle(41, 41, 45*math.pi/180, offset=(card_width * .308, card_height - (card_height * .377)))
+		draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.green)
 
-		# Start drawing the attributes
+		# Draw the circles for the attributes
 		if self.attributes:
-			rad = 35
-			attributes_pad_left = (details_pad_left - rad * 2) // 2
+			circle_radius = 35
+			attributes_pad_left = (details_pad_left - circle_radius * 2) // 2
 			attributes_pad_top = card_height - (card_height * .28)
 
 			for attribute, value in self.attributes.items():
 				draw.ellipse((attributes_pad_left, attributes_pad_top,
-							attributes_pad_left + rad * 2, attributes_pad_top + rad * 2),
-							fill=ImageColor.getrgb("#966a00"))
-				draw.ellipse((attributes_pad_left + 5, attributes_pad_top + 5,
-							attributes_pad_left + 5 + (rad - 5) * 2, attributes_pad_top + 5 + (rad - 5) * 2),
-							fill=0)
+							attributes_pad_left + circle_radius * 2, attributes_pad_top + circle_radius * 2),
+							fill=self.inner_bg,
+							outline=self.yellow,
+					  		width=5)
 				
 				attributes_pad_top += 100
 
-		# Start drawing the details
+		# Draw the details section
 		current_padding = details_pad_top
 
 		# Set Title
@@ -109,20 +110,20 @@ class Card:
 		current_padding += type_font.getbbox(self.type)[3] + 10
 
 		# Information
-		draw.text((details_pad_left, current_padding), self.info, fill="black", font=normal_font)
-		current_padding += normal_font.getbbox(self.info)[3] + 10
+		draw.text((details_pad_left, current_padding), self.info, fill="black", font=self.normal_font)
+		current_padding += self.normal_font.getbbox(self.info)[3] + 10
 
 		# Effect
 		import textwrap
 		para = textwrap.wrap(f"Effect: {self.effect}", width=40)
 		
 		for line in para:
-			draw.text((details_pad_left, current_padding), line, fill="black", font=normal_font)
+			draw.text((details_pad_left, current_padding), line, fill="black", font=self.normal_font)
 			current_padding += self.font_size + 5
 		
 		# Save the card image
 		card_name = self.name.lower().replace(" ", "_")
-		card_image.save(f"cards/{card_name}.png")
+		card.save(f"cards/{card_name}.png")
 		print(f"Card created and saved as '{card_name}.png'.")
 
 # Example usage
@@ -131,6 +132,7 @@ card = Card(name="Cum Snail",
 			info="It sticks everywhere.",
 			effect="Rub each others genitals for 2 minutes.",
 			image="penis.png",
+			border_size=0,
 			attributes={
 				'genders': 'both',
 				'cum': 'cum'
