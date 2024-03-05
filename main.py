@@ -15,7 +15,8 @@ class Card:
 		name: (str) Name of the card.
 		type: (str) Type of the card.
 		description: (str) Description for the card.
-		effect: (str) Path to the image for the card.
+		effect: (str) Effect of the card.
+		attributes: (dict) The attributes describing the card.
 		image: (str) Path to the image for the card.
 		"""
 		self.name = name
