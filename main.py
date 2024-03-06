@@ -40,6 +40,10 @@ class Card:
 		self.blue = ImageColor.getrgb("#4446c2")
 		self.yellow = ImageColor.getrgb("#966a00")
 
+		self.buff = ImageColor.getrgb("#41c4bc")
+		self.debuff = ImageColor.getrgb("#c74a7e")
+		self.magic = ImageColor.getrgb("#9560c3")
+
 		# Set the card accent colors and class based on creature type
 		if self.type == 'normal':
 			self.accent_color = self.blue
