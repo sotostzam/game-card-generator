@@ -54,6 +54,15 @@ class Card:
 		elif self.type == 'mythical':
 			self.accent_color = self.yellow
 			self.card_class = 'creature'
+		elif self.type == 'magic':
+			self.accent_color = self.magic
+			self.card_class = 'magic'
+		elif self.type == 'buff':
+			self.accent_color = self.buff
+			self.card_class = 'buff'
+		elif self.type == 'debuff':
+			self.accent_color = self.debuff
+			self.card_class = 'debuff'
 
 	def makeRectangle(self, l, w, theta, offset=(0,0)):
 		c, s = math.cos(theta), math.sin(theta)
