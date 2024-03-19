@@ -119,9 +119,9 @@ class Card:
 
 		# Draw the circles for the attributes
 		if self.attributes:
-			circle_radius = 35
+			circle_radius = 40
 			attributes_pad_left = (details_pad_left - circle_radius * 2) // 2
-			attributes_pad_top = int(card_height - (card_height * .28))
+			attributes_pad_top = int(card_height - (card_height * .29))
 
 			for attribute, value in self.attributes.items():
 				draw.ellipse((attributes_pad_left, attributes_pad_top,
@@ -132,9 +132,9 @@ class Card:
 				
 				try:
 					attribute_img = Image.open(f"assets/{value}.png")
-					attribute_img = attribute_img.resize([int(0.08 * s) for s in attribute_img.size], Image.LANCZOS)
+					attribute_img = attribute_img.resize([int(0.09 * s) for s in attribute_img.size], Image.LANCZOS)
 					attribute_img_x = int(details_pad_left - attribute_img.size[0]) // 2
-					attribute_img_y = attributes_pad_top + 15
+					attribute_img_y = attributes_pad_top + 17
 					card.paste(attribute_img, (attribute_img_x, attribute_img_y), mask=attribute_img)
 				except Exception:
 					pass
