@@ -21,7 +21,6 @@ class Card:
 		"""
 
 		self.name = name
-		self.type = type
 		self.description = description
 		self.effect = effect
 		self.image = image
@@ -36,34 +35,27 @@ class Card:
 		self.layout_size = (750, 1050)
 
 		self.inner_bg = "black"
-		self.red = ImageColor.getrgb("#bf3f3f")
 		self.green = ImageColor.getrgb("#9ac360")
-		self.blue = ImageColor.getrgb("#4446c2")
-		self.yellow = ImageColor.getrgb("#966a00")
-
-		self.buff = ImageColor.getrgb("#41c4bc")
-		self.debuff = ImageColor.getrgb("#c74a7e")
-		self.magic = ImageColor.getrgb("#9560c3")
 
 		# Set the card accent colors and class based on creature type
-		if self.type == 'normal':
-			self.accent_color = self.blue
-			self.card_class = 'creature'
-		elif self.type == 'annoying':
-			self.accent_color = self.red
-			self.card_class = 'creature'
-		elif self.type == 'mythical':
-			self.accent_color = self.yellow
-			self.card_class = 'creature'
-		elif self.type == 'magic':
-			self.accent_color = self.magic
-			self.card_class = 'magic'
-		elif self.type == 'buff':
-			self.accent_color = self.buff
-			self.card_class = 'buff'
-		elif self.type == 'debuff':
-			self.accent_color = self.debuff
-			self.card_class = 'debuff'
+		if type == 'normal':
+			self.accent_color = ImageColor.getrgb("#4446c2") # Blue
+			self.type = 'creature'
+		elif type == 'annoying':
+			self.accent_color = ImageColor.getrgb("#bf3f3f") # Red
+			self.type = 'creature'
+		elif type == 'mythical':
+			self.accent_color = ImageColor.getrgb("#966a00") # Gold
+			self.type = 'creature'
+		elif type == 'magic':
+			self.accent_color = ImageColor.getrgb("#9560c3") # ???
+			self.type = type
+		elif type == 'buff':
+			self.accent_color = ImageColor.getrgb("#41c4bc") # ???
+			self.type = type
+		elif type == 'debuff':
+			self.accent_color = ImageColor.getrgb("#c74a7e") # ???
+			self.type = type
 		
 	def create(self):
 		"""
@@ -91,7 +83,7 @@ class Card:
 				width=10
 			)
 			
-			card_class_image = Image.open(f"assets/{self.card_class}.png")
+			card_class_image = Image.open(f"assets/{self.type}.png")
 			card_class_image = card_class_image.resize([int(0.15 * s) for s in card_class_image.size], Image.LANCZOS)
 
 			card_class_image_x = int(desc_padding - card_class_image.size[0]) // 2
