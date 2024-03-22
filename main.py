@@ -21,6 +21,7 @@ class Card:
 		"""
 
 		self.name = name
+		self.type = type
 		self.description = description
 		self.effect = effect
 		self.image = image
@@ -35,27 +36,15 @@ class Card:
 		self.layout_size = (750, 1050)
 
 		self.inner_bg = "black"
-		self.green = ImageColor.getrgb("#9ac360")
 
 		# Set the card accent colors and class based on creature type
-		if type == 'normal':
-			self.accent_color = ImageColor.getrgb("#4446c2") # Blue
-			self.type = 'creature'
-		elif type == 'annoying':
-			self.accent_color = ImageColor.getrgb("#bf3f3f") # Red
-			self.type = 'creature'
-		elif type == 'mythical':
-			self.accent_color = ImageColor.getrgb("#966a00") # Gold
-			self.type = 'creature'
-		elif type == 'magic':
-			self.accent_color = ImageColor.getrgb("#9560c3") # ???
-			self.type = type
-		elif type == 'buff':
-			self.accent_color = ImageColor.getrgb("#41c4bc") # ???
-			self.type = type
-		elif type == 'debuff':
-			self.accent_color = ImageColor.getrgb("#c74a7e") # ???
-			self.type = type
+		if   type == 'basic':    self.accent_color = ImageColor.getrgb("#4446c2") # Blue
+		elif type == 'annoying': self.accent_color = ImageColor.getrgb("#bf3f3f") # Red
+		elif type == 'mythical': self.accent_color = ImageColor.getrgb("#966a00") # Gold
+		elif type == 'dark':     self.accent_color = ImageColor.getrgb("#292929") # Grey
+		elif type == 'magic':    self.accent_color = ImageColor.getrgb("#9ac360") # Green
+		elif type == 'buff':     self.accent_color = ImageColor.getrgb("#41c4bc") # Cyan
+		elif type == 'debuff':   self.accent_color = ImageColor.getrgb("#c74a7e") # Pink
 		
 	def create(self):
 		"""
@@ -83,11 +72,14 @@ class Card:
 				width=10
 			)
 			
-			card_class_image = Image.open(f"assets/{self.type}.png")
+			if self.type in ['basic', 'annoying', 'mythical']:
+				card_class_image = Image.open(f"assets/creature.png")
+			else:
+				card_class_image = Image.open(f"assets/{self.type}.png")
 			card_class_image = card_class_image.resize([int(0.15 * s) for s in card_class_image.size], Image.LANCZOS)
 
 			card_class_image_x = int(desc_padding - card_class_image.size[0]) // 2
-			card_class_image_y = int(card_height - (card_height * .417))
+			card_class_image_y = int(card_height - (card_height * .414))
 			self.card.paste(card_class_image, (card_class_image_x, card_class_image_y), mask=card_class_image)
 
 			vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .308, card_height - (card_height * .377)))
@@ -97,18 +89,18 @@ class Card:
 			if self.attributes:
 				current_padding_top = int(card_height - (card_height * .29))
 
-				for attribute, value in self.attributes.items():
+				for attribute in self.attributes:
 					create_circle(
 						radius = 40,
 						x = (desc_padding - 40 * 2) // 2,
 						y = current_padding_top,
 						fill = self.inner_bg,
 						outline=self.accent_color,
-						width=10
+						width=5
 					)
 					
 					try:
-						attribute_img = Image.open(f"assets/{value}.png")
+						attribute_img = Image.open(f"assets/{attribute}.png")
 						attribute_img = attribute_img.resize([int(0.09 * s) for s in attribute_img.size], Image.LANCZOS)
 						attribute_img_x = int(desc_padding - attribute_img.size[0]) // 2
 						attribute_img_y = current_padding_top + 17
@@ -126,7 +118,10 @@ class Card:
 			current_padding += self.title_font.getbbox(self.name.upper())[3] + 5
 
 			# Set Type
-			draw.text((desc_padding, current_padding), f"{self.type.capitalize()} Encounter", fill=self.accent_color, font=self.type_font)
+			if self.type in ['basic', 'annoying', 'mythical']:
+				draw.text((desc_padding, current_padding), f"{self.type.capitalize()} Encounter", fill=self.accent_color, font=self.type_font)
+			else:
+				draw.text((desc_padding, current_padding), f"{self.type.capitalize()} Card", fill=self.accent_color, font=self.type_font)
 				
 			current_padding += self.type_font.getbbox(self.type)[3] + 10
 
