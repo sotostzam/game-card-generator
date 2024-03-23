@@ -82,9 +82,6 @@ class Card:
 			card_class_image_y = int(card_height - (card_height * .414))
 			self.card.paste(card_class_image, (card_class_image_x, card_class_image_y), mask=card_class_image)
 
-			vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .308, card_height - (card_height * .377)))
-			draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
-
 		def draw_attributes():
 			if self.attributes:
 				current_padding_top = int(card_height - (card_height * .29))
@@ -109,6 +106,9 @@ class Card:
 						pass
 					
 					current_padding_top += 100
+
+			vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .9, card_height - (card_height * .377)))
+			draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
 
 		def write_description():
 			current_padding = card_height - (card_height * 32 / 100)
