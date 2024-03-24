@@ -107,8 +107,17 @@ class Card:
 					
 					current_padding_top += 100
 
-			vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .9, card_height - (card_height * .377)))
-			draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
+			if self.type in ['annoying', 'basic', 'mythical']:
+				vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .9, card_height - (card_height * .377)))
+				draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
+				if self.type == 'basic':
+					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .83, card_height - (card_height * .377)))
+					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
+				if self.type == 'mythical':
+					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .76, card_height - (card_height * .377)))
+					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
+					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .83, card_height - (card_height * .377)))
+					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
 
 		def write_description():
 			current_padding = card_height - (card_height * 32 / 100)
