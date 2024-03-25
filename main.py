@@ -114,10 +114,45 @@ class Card:
 					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .83, card_height - (card_height * .377)))
 					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
 				if self.type == 'mythical':
-					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .76, card_height - (card_height * .377)))
-					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
 					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .83, card_height - (card_height * .377)))
 					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
+					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .76, card_height - (card_height * .377)))
+					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
+			else:
+				create_circle(
+					radius = 25,
+					x = card_width * .9,
+					y = card_height - (card_height * .4),
+					fill = self.inner_bg,
+					outline=self.accent_color,
+					width=10
+				)
+				if self.type == 'magic':
+					create_circle(
+						radius = 25,
+						x = card_width * .83,
+						y = card_height - (card_height * .4),
+						fill = self.inner_bg,
+						outline=self.accent_color,
+						width=10
+					)
+				if self.type == 'buff':
+					create_circle(
+						radius = 25,
+						x = card_width * .83,
+						y = card_height - (card_height * .4),
+						fill = self.inner_bg,
+						outline=self.accent_color,
+						width=10
+					)
+					create_circle(
+						radius = 25,
+						x = card_width * .76,
+						y = card_height - (card_height * .4),
+						fill = self.inner_bg,
+						outline=self.accent_color,
+						width=10
+					)
 
 		def write_description():
 			current_padding = card_height - (card_height * 32 / 100)
