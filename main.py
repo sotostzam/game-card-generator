@@ -107,52 +107,24 @@ class Card:
 					
 					current_padding_top += 100
 
+
+			indicator_offset = .9
 			if self.type in ['annoying', 'basic', 'mythical']:
-				vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .9, card_height - (card_height * .377)))
-				draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
-				if self.type == 'basic':
-					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .83, card_height - (card_height * .377)))
+				for _ in range(1 if self.type == "annoying" else (2 if self.type == "basic" else 3)):
+					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * indicator_offset, card_height - (card_height * .377)))
 					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
-				if self.type == 'mythical':
-					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .83, card_height - (card_height * .377)))
-					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
-					vertices = create_rectangle(41, 41, 45*math.pi/180, offset=(card_width * .76, card_height - (card_height * .377)))
-					draw.polygon(vertices, fill=self.inner_bg, width=10, outline=self.accent_color)
+					indicator_offset -= .08
 			else:
-				create_circle(
-					radius = 25,
-					x = card_width * .9,
-					y = card_height - (card_height * .4),
-					fill = self.inner_bg,
-					outline=self.accent_color,
-					width=10
-				)
-				if self.type == 'magic':
+				for _ in range(1 if self.type == "debuff" else (2 if self.type == "magic" else 3)):
 					create_circle(
 						radius = 25,
-						x = card_width * .83,
+						x = card_width * indicator_offset - 25,
 						y = card_height - (card_height * .4),
 						fill = self.inner_bg,
 						outline=self.accent_color,
 						width=10
 					)
-				if self.type == 'buff':
-					create_circle(
-						radius = 25,
-						x = card_width * .83,
-						y = card_height - (card_height * .4),
-						fill = self.inner_bg,
-						outline=self.accent_color,
-						width=10
-					)
-					create_circle(
-						radius = 25,
-						x = card_width * .76,
-						y = card_height - (card_height * .4),
-						fill = self.inner_bg,
-						outline=self.accent_color,
-						width=10
-					)
+					indicator_offset -= .08
 
 		def write_description():
 			current_padding = card_height - (card_height * 32 / 100)
