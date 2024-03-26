@@ -146,7 +146,11 @@ class Card:
 			for line in para:
 				draw.text((desc_padding, current_padding), line, fill="black", font=self.normal_font)
 				current_padding += self.font_size + 5
-			current_padding += 12
+			current_padding += 20
+
+			shape = [(desc_padding, current_padding), (card_width - desc_padding, current_padding)]
+			draw.line(shape, fill=self.accent_color, width=2)
+			current_padding += 15
 
 			# Effect
 			para = textwrap.wrap(f"Effect: {self.effect}", width=42)
